@@ -1,4 +1,4 @@
-version: '3.4'
+version: "3.4"
 services:
   db:
     image: mysql:5.7.22
@@ -9,29 +9,29 @@ services:
       MYSQL_ROOT_PASSWORD: docker
       MYSQL_USER: docker
       MYSQL_PASSWORD: docker
-      MYSQL_DATABASE: docker_to_aws_with_java
+      MYSQL_DATABASE: docker-to-aws-with-java
     ports:
-      - "3308:3306"
+      - "3308:3308"
     networks:
       - udemy-network
+
   docker-to-aws-with-java:
     image: docker-to-aws-with-java
     restart: always
-    build:
-      context: .
-      dockerfile: app/Dockerfile
+    build: ./app
     working_dir: /app
-    environment:
-      TZ: America/Sao_Paulo    
-    ports:
-      - "8080:8080"
-    command: mvn spring-boot:run
+    volumes:
+      - ./app:/app
+    expose:
+      - "8080"
+    command: spring-boot:run
     links:
       - db
     depends_on:
       - db
     networks:
-      - udemy-network  
+      - udemy-network
+
 networks:
-    udemy-network:
-        driver: bridge
+  udemy-network:
+    driver: bridge
